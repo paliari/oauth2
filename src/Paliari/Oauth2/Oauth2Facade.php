@@ -10,7 +10,7 @@ namespace Paliari\Oauth2;
 use OAuth2\GrantType\ClientCredentials;
 use OAuth2\Request;
 use OAuth2\Response;
-use OAuth2\ResponseType\AuthorizationCode;
+use OAuth2\GrantType\AuthorizationCode;
 use OAuth2\Server;
 use OAuth2\Storage\Pdo;
 
@@ -57,8 +57,8 @@ class Oauth2Facade
 
     public static function frontController()
     {
-        $path = $_SERVER['REQUEST_URI'];
-        $path = trim($path, '/');
+        $url = parse_url($_SERVER['REQUEST_URI']);
+        $path = trim($url['path'], '/');
 
         $facade = new static;
 
