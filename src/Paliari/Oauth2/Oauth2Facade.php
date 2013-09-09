@@ -55,6 +55,28 @@ class Oauth2Facade
 
     }
 
+    public static function frontController()
+    {
+        $path = $_SERVER['REQUEST_URI'];
+        $path = trim($path, '/');
+
+        $facade = new static;
+
+        switch ($path) {
+            case "authorize":
+                $facade->authorize();
+            break;
+
+            case "token":
+                $facade->token();
+            break;
+
+            case "resource":
+                $facade->resource();
+            break;
+        }
+    }
+
     public function authorize()
     {
 
