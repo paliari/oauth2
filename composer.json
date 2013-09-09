@@ -1,0 +1,15 @@
+{
+    "name": "paliari/oauth2",
+    "version": "0.1.0-alpha",
+    "description": "Oauth Facade",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marcos Paliari",
+            "email": "marcos@paliari.com.br"
+        }
+    ],
+    "require": {
+        "bshaffer/oauth2-server-php": "dev-master"
+    }
+}
