@@ -96,17 +96,12 @@ class Oauth2Facade
         $user_id = 'user1';
         // display an authorization form
         if (empty($_POST)) {
-            exit('
-                <form method="post">
-                  <label>Do You Authorize TestClient?</label><br />
-                  <input type="submit" name="authorized" value="yes">
-                  <input type="submit" name="authorized" value="no">
-                </form>'
-            );
+            $html = Tpl::authorize('Test Client');
+            exit($html);
         }
 
         // print the authorization code if the user has authorized your client
-        $is_authorized = ($_POST['authorized'] === 'Autorizar');
+        $is_authorized = ($_POST['authorized'] === 'yes');
         $this->server->handleAuthorizeRequest($request, $response, $is_authorized, $user_id);
         if ($is_authorized) {
             // this is only here so that you get to see your code in the cURL request. Otherwise, we'd redirect back to the client
@@ -134,4 +129,5 @@ class Oauth2Facade
         echo json_encode(array('success' => true, 'message' => 'You accessed my APIs!'));
 
     }
+
 }
