@@ -9,6 +9,11 @@
             "email": "marcos@paliari.com.br"
         }
     ],
+    "autoload": {
+        "psr-0": {
+            "Paliari\\Oauth2\\": "src/"
+        }
+    },
     "require": {
         "bshaffer/oauth2-server-php": "dev-master"
     }
