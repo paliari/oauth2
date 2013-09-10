@@ -11,6 +11,8 @@ namespace Paliari\Oauth2;
 class Tpl
 {
 
+    protected $app_title = 'Oauth2 Server de Paliari';
+
     public static function header()
     {
         $ret = <<<S
@@ -66,12 +68,13 @@ S;
      */
     public static function authorize($client_label)
     {
+        $app_title = self::$app_title;
         $content = <<<S
 <div class="container">
     <div class="page-header">
         <div class="alert alert-warning">
             <b>ATENÇÃO!</b>
-            <p>A aplicação <b>"$client_label"</b> quer autenticar-se usando suas credenciais do ISS-e.</p>
+            <p>A aplicação <b>"$client_label"</b> quer autenticar-se usando suas credenciais do $app_title.</p>
         </div>
     </div>
     <div class="panel panel-info" >
