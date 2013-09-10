@@ -80,8 +80,7 @@ class Oauth2Facade
 
     public static function frontController()
     {
-        $url = parse_url($_SERVER['REQUEST_URI']);
-        $path = trim($url['path'], '/');
+        $path = new Path();
 
         $facade = new static;
 
