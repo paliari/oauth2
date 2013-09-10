@@ -11,7 +11,7 @@ namespace Paliari\Oauth2;
 class Tpl
 {
 
-    protected $app_title = 'Oauth2 Server de Paliari';
+    protected static $app_title = 'Oauth2 Server de Paliari';
 
     public static function header()
     {
