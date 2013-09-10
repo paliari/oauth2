@@ -16,14 +16,6 @@ use OAuth2\Storage\Pdo;
 
 class Oauth2Facade
 {
-    /**
-     * @var array
-     */
-    protected $db;
-    /**
-     * @var array
-     */
-    protected $config;
 
     /**
      * @var Pdo
@@ -36,17 +28,22 @@ class Oauth2Facade
     protected $server;
 
     /**
-     * @param array $db
+     * @param array|\PDO $connection instance PDO or array( 'dsn' => 'mysql:dbname=test;host=localhost',
+     * 'username' => 'root',
+     * 'password' => '',
+     * )
      * @param array $config
      */
-    public function __construct(array $db  = array(), array $config = array())
+    public function __construct($connection = array(), array $config = array())
     {
-        $this->db = array_merge(array(
-            'dsn' => 'mysql:dbname=test;host=localhost',
-            'username' => 'root',
-            'password' => '',
-        ), $db);
-        $this->config = array_merge(array(
+        if (is_array($connection)) {
+            $connection = array_merge(array(
+                'dsn' => 'mysql:dbname=test;host=127.0.0.1',
+                'username' => 'root',
+                'password' => '',
+            ), $connection);
+        }
+        $config = array_merge(array(
             'client_table' => 'oauth_clients',
             'access_token_table' => 'oauth_access_tokens',
             'refresh_token_table' => 'oauth_refresh_tokens',
@@ -55,14 +52,8 @@ class Oauth2Facade
             'jwt_table' => 'oauth_jwt',
         ), $config);
 
-        $this->init();
-    }
-
-    public function init()
-    {
-
         // $dsn is the Data Source Name for your database, for exmaple "mysql:dbname=my_oauth2_db;host=localhost"
-        $storage = new Pdo($this->db, $this->config);
+        $storage = new Pdo($connection, $config);
 
         // Pass a storage object or array of storage objects to the OAuth2 server class
         $server = new Server($storage);
