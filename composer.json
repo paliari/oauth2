@@ -16,5 +16,8 @@
     },
     "require": {
         "bshaffer/oauth2-server-php": "dev-master"
+    },
+    "scripts": {
+        "post-install-cmd": ["test -e phpunit.phar || wget http://pear.phpunit.de/get/phpunit.phar && chmod +x phpunit.phar"]
     }
 }
