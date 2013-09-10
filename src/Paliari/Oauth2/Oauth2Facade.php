@@ -63,6 +63,10 @@ class Oauth2Facade
             ), $connection);
         }
 
+        $storage_config = array_merge(array(
+            'user_table' => 'usuarios',
+        ), $storage_config);
+
         $server_config = array_merge(array(
             'enforce_state' => false,
         ), $server_config);
@@ -81,7 +85,25 @@ class Oauth2Facade
 
         $this->server = $server;
         $this->storage = $storage;
+        $this->isLogged();
 
+    }
+
+    public function isLogged()
+    {
+        if (!$this->getUsuarioLoggedId()) {
+            $location = $_SERVER['REQUEST_URI'];
+            header("Location: /auth/login/?location=$location");
+        }
+    }
+
+    /**
+     * @return int|null
+     */
+    protected function getUsuarioLoggedId()
+    {
+        session_start();
+        return @$_SESSION['usuario_id'];
     }
 
     public static function frontController()
@@ -120,7 +142,7 @@ class Oauth2Facade
         $client_id = $request->query("client_id");
         $client = $this->storage->getClientDetails($client_id);
         extract((array)$client);
-        $user_id = 'user1';
+        $user_id = $this->getUsuarioLoggedId();
 
         // display an authorization form
         if (empty($_POST)) {
