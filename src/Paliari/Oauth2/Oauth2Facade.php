@@ -28,13 +28,32 @@ class Oauth2Facade
     protected $server;
 
     /**
+     *
      * @param array|\PDO $connection instance PDO or array( 'dsn' => 'mysql:dbname=test;host=localhost',
      * 'username' => 'root',
      * 'password' => '',
      * )
-     * @param array $config
+     * @param array $storage_config default array(
+     * 'client_table' => 'oauth_clients',
+     * 'access_token_table' => 'oauth_access_tokens',
+     * 'refresh_token_table' => 'oauth_refresh_tokens',
+     * 'code_table' => 'oauth_authorization_codes',
+     * 'user_table' => 'oauth_users',
+     * 'jwt_table' => 'oauth_jwt',
+     * )
+     *
+     * @param array $server_config default array(
+     * 'access_lifetime'          => 3600,
+     * 'www_realm'                => 'Service',
+     * 'token_param_name'         => 'access_token',
+     * 'token_bearer_header_name' => 'Bearer',
+     * 'enforce_state'            => true,
+     * 'require_exact_redirect_uri' => true,
+     * 'allow_implicit'           => false,
+     * 'allow_credentials_in_request_body' => true,
+     * ).
      */
-    public function __construct($connection = array(), array $config = array())
+    public function __construct($connection = array(), array $storage_config = array(), $server_config = array())
     {
         if (is_array($connection)) {
             $connection = array_merge(array(
@@ -43,20 +62,16 @@ class Oauth2Facade
                 'password' => '',
             ), $connection);
         }
-        $config = array_merge(array(
-            'client_table' => 'oauth_clients',
-            'access_token_table' => 'oauth_access_tokens',
-            'refresh_token_table' => 'oauth_refresh_tokens',
-            'code_table' => 'oauth_authorization_codes',
-            'user_table' => 'oauth_users',
-            'jwt_table' => 'oauth_jwt',
-        ), $config);
+
+        $server_config = array_merge(array(
+            'enforce_state' => false,
+        ), $server_config);
 
         // $dsn is the Data Source Name for your database, for exmaple "mysql:dbname=my_oauth2_db;host=localhost"
-        $storage = new Pdo($connection, $config);
+        $storage = new Pdo($connection, $storage_config);
 
         // Pass a storage object or array of storage objects to the OAuth2 server class
-        $server = new Server($storage);
+        $server = new Server($storage, $server_config);
 
         // Add the "Client Credentials" grant type (it is the simplest of the grant types)
         $server->addGrantType(new ClientCredentials($storage));
