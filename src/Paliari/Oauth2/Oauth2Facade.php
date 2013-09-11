@@ -28,6 +28,11 @@ class Oauth2Facade
     protected $server;
 
     /**
+     * @var UserProviderInterface
+     */
+    protected $userProvider;
+
+    /**
      *
      * @param array|\PDO $connection instance PDO or array( 'dsn' => 'mysql:dbname=test;host=localhost',
      * 'username' => 'root',
@@ -85,32 +90,36 @@ class Oauth2Facade
 
         $this->server = $server;
         $this->storage = $storage;
-        $this->isLogged();
 
-    }
-
-    public function isLogged()
-    {
-        if (!$this->getUsuarioLoggedId()) {
-            $location = $_SERVER['REQUEST_URI'];
-            header("Location: /auth/login/?location=$location");
-        }
     }
 
     /**
-     * @return int|null
+     * @param UserProviderInterface $userProvider
      */
-    protected function getUsuarioLoggedId()
+    public function setUserProvider(UserProviderInterface $userProvider)
     {
-        session_start();
-        return @$_SESSION['usuario_id'];
+        $this->userProvider = $userProvider;
+    }
+    /**
+     * @return UserProviderInterface
+     */
+    public function getUserProvider()
+    {
+        return $this->userProvider;
     }
 
-    public static function frontController()
+    /**
+     * @param UserProviderInterface $userProvider
+     */
+    public static function frontController(UserProviderInterface $userProvider)
     {
         $path = new Path();
 
         $facade = new static;
+
+        $facade->setUserProvider($userProvider);
+
+        $userProvider->verifyUser();
 
         switch ($path) {
             case "authorize":
@@ -142,7 +151,7 @@ class Oauth2Facade
         $client_id = $request->query("client_id");
         $client = $this->storage->getClientDetails($client_id);
         extract((array)$client);
-        $user_id = $this->getUsuarioLoggedId();
+        $user_id = $this->getUserProvider()->getUserId();
 
         // display an authorization form
         if (empty($_POST)) {
