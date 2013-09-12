@@ -18,6 +18,11 @@ class Oauth2Facade
 {
 
     /**
+     * @var Oauth2Facade
+     */
+    protected static $_instance;
+
+    /**
      * @var Pdo
      */
     protected $storage;
@@ -34,20 +39,9 @@ class Oauth2Facade
 
     /**
      *
-     * @param array|\PDO $connection instance PDO or array( 'dsn' => 'mysql:dbname=test;host=localhost',
-     * 'username' => 'root',
-     * 'password' => '',
-     * )
-     * @param array $storage_config default array(
-     * 'client_table' => 'oauth_clients',
-     * 'access_token_table' => 'oauth_access_tokens',
-     * 'refresh_token_table' => 'oauth_refresh_tokens',
-     * 'code_table' => 'oauth_authorization_codes',
-     * 'user_table' => 'oauth_users',
-     * 'jwt_table' => 'oauth_jwt',
-     * )
+     * @param Doctrine|\PDO $storage
      *
-     * @param array $server_config default array(
+     * @param array $config default array(
      * 'access_lifetime'          => 3600,
      * 'www_realm'                => 'Service',
      * 'token_param_name'         => 'access_token',
@@ -58,29 +52,16 @@ class Oauth2Facade
      * 'allow_credentials_in_request_body' => true,
      * ).
      */
-    public function __construct($connection = array(), array $storage_config = array(), $server_config = array())
+    public function __construct($storage, $config=array())
     {
-        if (is_array($connection)) {
-            $connection = array_merge(array(
-                'dsn' => 'mysql:dbname=test;host=127.0.0.1',
-                'username' => 'root',
-                'password' => '',
-            ), $connection);
-        }
+        $this->storage = $storage;
 
-        $storage_config = array_merge(array(
-            'user_table' => 'usuarios',
-        ), $storage_config);
-
-        $server_config = array_merge(array(
+        $config = array_merge(array(
             'enforce_state' => false,
-        ), $server_config);
-
-        // $dsn is the Data Source Name for your database, for exmaple "mysql:dbname=my_oauth2_db;host=localhost"
-        $storage = new Pdo($connection, $storage_config);
+        ), $config);
 
         // Pass a storage object or array of storage objects to the OAuth2 server class
-        $server = new Server($storage, $server_config);
+        $server = new Server($storage, $config);
 
         // Add the "Client Credentials" grant type (it is the simplest of the grant types)
         $server->addGrantType(new ClientCredentials($storage));
@@ -89,7 +70,6 @@ class Oauth2Facade
         $server->addGrantType(new AuthorizationCode($storage));
 
         $this->server = $server;
-        $this->storage = $storage;
 
     }
 
@@ -110,28 +90,25 @@ class Oauth2Facade
 
     /**
      * @param UserProviderInterface $userProvider
+     * @param $connection
      */
-    public static function frontController(UserProviderInterface $userProvider)
+    public function frontController()
     {
+        $this->getUserProvider()->verifyUser();
+
         $path = new Path();
-
-        $facade = new static;
-
-        $facade->setUserProvider($userProvider);
-
-        $userProvider->verifyUser();
 
         switch ($path) {
             case "authorize":
-                $facade->authorize();
+                $this->authorize();
             break;
 
             case "token":
-                $facade->token();
+                $this->token();
             break;
 
             case "resource":
-                $facade->resource();
+                $this->resource();
             break;
         }
     }

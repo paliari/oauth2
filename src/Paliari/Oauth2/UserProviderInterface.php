@@ -10,6 +10,12 @@ namespace Paliari\Oauth2;
 
 interface UserProviderInterface
 {
+
+    /**
+     * @param Storage $storage
+     */
+    public function __construct($storage);
+
     /**
      * verifica se o usuario esta logado e redireciona para tela de login.
      *
@@ -23,5 +29,12 @@ interface UserProviderInterface
      * @return mixed
      */
     public function getUserId();
+
+    /**
+     * Obtem usuario logado.
+     *
+     * @return mixed
+     */
+    public function getUserDetails();
 
 }

@@ -1,14 +1,18 @@
 <?php
-require_once __DIR__ . '/../../../vendor/autoload.php';
+require_once __DIR__ . '/../../oauth2/boot.php';
 
 session_start();
 if (!empty($_POST) && $_POST['login']=='marcos' && $_POST['password']=='123') {
-    $_SESSION['usuario_id'] = $_POST['login'];
-    $location = $_REQUEST['location'];
-    header("Location: $location");
-} else {
-    session_destroy();
+    $sql = "select id, senha from usuarios where login = :login";
+    $user = $storage->fetch($sql, array('login' => $_POST['login']));
+    if ($user && $user['senha']===$_POST['password']) {
+        $_SESSION['usuario_id'] = $user['id'];
+        $location = $_REQUEST['location'];
+        header("Location: $location");
+        exit;
+    }
 }
+session_destroy();
 $content = <<<S
 <div class="container">
     <div class="page-header">

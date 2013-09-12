@@ -17,6 +17,9 @@
     "require": {
         "bshaffer/oauth2-server-php": "dev-master"
     },
+    "require-dev": {
+        "doctrine/dbal": "2.2.2"
+    },
     "scripts": {
         "post-install-cmd": ["test -e phpunit.phar || wget http://pear.phpunit.de/get/phpunit.phar && chmod +x phpunit.phar"]
     }

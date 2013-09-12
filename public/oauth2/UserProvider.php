@@ -7,6 +7,17 @@
 
 class UserProvider implements \Paliari\Oauth2\UserProviderInterface
 {
+
+    /**
+     * @var \Paliari\Oauth2\Storage
+     */
+    protected $storage;
+
+    public function __construct($storage)
+    {
+        $this->storage = $storage;
+    }
+
     public function verifyUser()
     {
         if (!$this->getUserId()) {
@@ -19,6 +30,12 @@ class UserProvider implements \Paliari\Oauth2\UserProviderInterface
     {
         session_start();
         return @$_SESSION['usuario_id'];
+    }
+
+    public function getUserDetails()
+    {
+        $user = $this->storage->getUser($this->getUserId());
+        return $user;
     }
 
 }
