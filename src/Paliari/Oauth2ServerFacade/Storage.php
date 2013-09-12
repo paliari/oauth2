@@ -1,6 +1,6 @@
 <?php
 
-namespace Paliari\Oauth2;
+namespace Paliari\Oauth2ServerFacade;
 
 use OAuth2\Storage\Pdo;
 

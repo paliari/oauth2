@@ -6,7 +6,7 @@
  * Date: 09/09/13
  * Time: 18:37
  */
-namespace Paliari\Oauth2;
+namespace Paliari\Oauth2ServerFacade;
 
 class Tpl
 {
@@ -20,7 +20,7 @@ class Tpl
 <html>
   <head>
     <meta charset="utf-8">
-    <title>ISS-e Oauth2</title>
+    <title>ISS-e Oauth2ServerFacade</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen">

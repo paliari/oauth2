@@ -5,7 +5,7 @@
  * Time: 09:39
  */
 
-namespace Paliari\Oauth2;
+namespace Paliari\Oauth2ServerFacade;
 
 
 interface UserProviderInterface

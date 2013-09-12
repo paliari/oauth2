@@ -18,10 +18,9 @@ $connectionParams = array(
 
 $connection = \Doctrine\DBAL\DriverManager::getConnection($connectionParams);
 
-$storage = new \Paliari\Oauth2\Storage($connection, array('user_table' => 'usuarios'));
-//$storage = new \OAuth2\Storage\Pdo($connection->getWrappedConnection());
+$storage = new \Paliari\Oauth2ServerFacade\Storage($connection, array('user_table' => 'usuarios'));
 
-$oauth = new \Paliari\Oauth2\Oauth2Facade($storage);
+$oauth = new \Paliari\Oauth2ServerFacade\Oauth2Facade($storage);
 
 $userProvider = new UserProvider($storage);
 $oauth->setUserProvider($userProvider);

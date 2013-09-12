@@ -5,7 +5,7 @@
  * Time: 17:12
  */
 
-namespace Paliari\Oauth2;
+namespace Paliari\Oauth2ServerFacade;
 
 use OAuth2\GrantType\ClientCredentials;
 use OAuth2\Request;

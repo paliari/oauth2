@@ -40,6 +40,6 @@ $content = <<<S
 </div>
 S;
 
-echo \Paliari\Oauth2\Tpl::page($content);
+echo \Paliari\Oauth2ServerFacade\Tpl::page($content);
 
 ?>
