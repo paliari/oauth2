@@ -5,11 +5,11 @@
  * Time: 09:49
  */
 
-class UserProvider implements \Paliari\Oauth2\UserProviderInterface
+class UserProvider implements \Paliari\Oauth2ServerFacade\UserProviderInterface
 {
 
     /**
-     * @var \Paliari\Oauth2\Storage
+     * @var \Paliari\Oauth2ServerFacade\Storage
      */
     protected $storage;
 
