@@ -21,8 +21,8 @@ class UserProvider implements \Paliari\Oauth2ServerFacade\UserProviderInterface
     public function verifyUser()
     {
         if (!$this->getUserId()) {
-            $location = urlencode($_SERVER['REQUEST_URI']);
-            header("Location: /auth/login/?location=$location");
+            $return_to = urlencode($_SERVER['REQUEST_URI']);
+            header("Location: /auth/login/?return_to=$return_to");
         }
     }
 
