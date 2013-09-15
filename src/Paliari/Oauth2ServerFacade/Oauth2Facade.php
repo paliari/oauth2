@@ -8,6 +8,7 @@
 namespace Paliari\Oauth2ServerFacade;
 
 use OAuth2\GrantType\ClientCredentials;
+use OAuth2\GrantType\RefreshToken;
 use OAuth2\Request;
 use OAuth2\Response;
 use OAuth2\GrantType\AuthorizationCode;
@@ -110,6 +111,10 @@ class Oauth2Facade
             case "resource":
                 $this->resource();
             break;
+
+            case "refresh":
+                $this->refresh();
+            break;
         }
     }
 
@@ -173,4 +178,22 @@ class Oauth2Facade
         echo json_encode($ret);
     }
 
+    public function refresh()
+    {
+        $request = Request::createFromGlobals();
+        $response = new Response();
+
+        $refresh = new RefreshToken($this->storage);
+
+        // validate the authorize request
+        if (!$refresh->validateRequest($request, $response)) {
+            $response->send();
+            die;
+        }
+
+        $accessToken = new \OAuth2\ResponseType\AccessToken($this->storage);
+        $token = $refresh->createAccessToken($accessToken, $refresh->getClientId(), $refresh->getUserId(), $refresh->getScope());
+        header('Content-Type: application/json');
+        echo json_encode($token);
+    }
 }

@@ -86,9 +86,10 @@ class Storage extends Pdo
     /* OAuth2_Storage_RefreshTokenInterface */
     public function getRefreshToken($refresh_token)
     {
-        $sql = sprintf('SELECT * FROM %s WHERE refresh_token = :refresh_token', $this->config['refresh_token_table']);
+        $sql = sprintf('SELECT * from %s where refresh_token = :refresh_token', $this->config['refresh_token_table']);
 
         $token = $this->fetch($sql, compact('refresh_token'));
+
         if ($token) {
             // convert expires to epoch time
             $token['expires'] = strtotime($token['expires']);
@@ -105,6 +106,7 @@ class Storage extends Pdo
         if (!$res = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             return false;
         }
+
         return array_change_key_case($res, CASE_LOWER);
     }
 }
