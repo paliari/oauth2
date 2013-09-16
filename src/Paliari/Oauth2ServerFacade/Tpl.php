@@ -80,7 +80,7 @@ S;
         $content = <<<S
 <div class="container">
     <div class="page-header">
-        <div class="alert alert-warning">
+        <div class="alert alert-info" style="color: #000">
             <h4>ATENÇÃO!</h4>
             <h4>Um aplicativo de terceiros gostaria de autenticar-se usando sua conta do $app_title.</h4>
             <p>Por favor, leia com atenção! Só permitir o acesso a aplicativos que você conhece e confia.</p>
@@ -99,26 +99,26 @@ S;
           </div>
         </div>
     </div>
-    <div class="well">
+    <div class="page-header">
       <p>
-        <strong>Saiba mais</strong>
+        <strong>Saiba o que significa isso</strong>
       </p>
       <p>
-        $client_label quer usar OAuth para identificá-lo com sua conta do <strong>$app_title</strong>.
+        <strong>$client_label</strong> quer usar OAuth para identificá-lo com sua conta do <strong>$app_title</strong>.
+      </p>
+      <p>
         OAuth permite que aplicativos de terceiros use a sua identidade no $app_title, poupando-o de criar um novo nome de usuário e senha em <a href="$redirect_uri">$redirect_uri</a>.
       </p>
+      <p>
+        Esse aplicativo não terá accesso a sua senha do $app_title, mas terá acesso as suas informações pessoais, como: e-mail, telefone, enderço, etc.
+      </p>
     </div>
-    <div class="panel panel-info" >
-        <div class="panel-heading">
-            <h3 class="panel-title">Autorizar o acesso a esse app?</h3>
-        </div>
-        <div class="panel-body">
-            <form method="post">
-                <input type="submit" name="authorized" class="btn btn-primary btn-lg" value="Autorizar">
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="submit" name="authorized" class="btn btn-warning btn-lg" value="Recusar">
-            </form>
-        </div>
+    <div class="">
+        <form method="post">
+            <input type="submit" name="authorized" class="btn btn-primary btn-lg" value="Autorizar acesso">
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="submit" name="authorized" class="btn btn-warning btn-lg" value="Recusar">
+        </form>
     </div>
 </div>
 S;
