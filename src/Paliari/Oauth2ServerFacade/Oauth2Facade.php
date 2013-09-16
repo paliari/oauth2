@@ -132,12 +132,11 @@ class Oauth2Facade
 
         $client_id = $request->query("client_id");
         $client = $this->storage->getClientDetails($client_id);
-        extract((array)$client);
         $user_id = $this->getUserProvider()->getUserId();
 
         // display an authorization form
         if (empty($_POST)) {
-            $html = Tpl::authorize($client_label);
+            $html = Tpl::authorize($client);
             exit($html);
         }
 

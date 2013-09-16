@@ -66,16 +66,47 @@ S;
      * @param string $client_label
      * @return string
      */
-    public static function authorize($client_label)
+    public static function authorize($client)
     {
+        $client = array_merge(array(
+                'redirect_uri' => 'http://paliari.com.br',
+                'client_label' => 'APP Client Paliari',
+                'client_image' => '//paliari.com.br/assets/img/timbre_paliari.png',
+                'client_description' => 'Desenvolvido por Paliari',
+            ), (array)$client
+        );
+        extract($client);
         $app_title = self::$app_title;
         $content = <<<S
 <div class="container">
     <div class="page-header">
         <div class="alert alert-warning">
-            <b>ATENÇÃO!</b>
-            <p>A aplicação <b>"$client_label"</b> quer autenticar-se usando suas credenciais do $app_title.</p>
+            <h4>ATENÇÃO!</h4>
+            <h4>Um aplicativo de terceiros gostaria de autenticar-se usando sua conta do $app_title.</h4>
+            <p>Por favor, leia com atenção! Só permitir o acesso a aplicativos que você conhece e confia.</p>
         </div>
+        <div class="row">
+          <div class="col-md-2">
+              <a class="box" href="$redirect_uri">
+                <img src="$client_image" />
+              </a>
+          </div>
+          <div class="col-md-10">
+            <div class="description">
+              <h3><a href="$redirect_uri">$client_label</a></h3>
+              <p class="text-muted">– $client_description</p>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="well">
+      <p>
+        <strong>Saiba mais</strong>
+      </p>
+      <p>
+        $client_label quer usar OAuth para identificá-lo com sua conta do <strong>$app_title</strong>.
+        OAuth permite que aplicativos de terceiros use a sua identidade no $app_title, poupando-o de criar um novo nome de usuário e senha em <a href="$redirect_uri">$redirect_uri</a>.
+      </p>
     </div>
     <div class="panel panel-info" >
         <div class="panel-heading">

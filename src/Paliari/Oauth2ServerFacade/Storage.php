@@ -27,7 +27,7 @@ class Storage extends Pdo
 
     public function getUser($user_id)
     {
-        $sql = 'SELECT id, nome, login, cpfcgc, tipuser_id, email, abilitado from usuarios';
+        $sql = 'SELECT * from usuarios';
         $sql .= ' where id=:user_id';
         $params = array('user_id' => $user_id);
 
@@ -107,6 +107,7 @@ class Storage extends Pdo
             return false;
         }
 
-        return array_change_key_case($res, CASE_LOWER);
+        return $res;
     }
+
 }
