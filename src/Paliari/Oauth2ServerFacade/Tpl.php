@@ -77,6 +77,7 @@ S;
         );
         extract($client);
         $app_title = self::$app_title;
+
         $content = <<<S
 <div class="container">
     <div class="page-header">
@@ -113,16 +114,25 @@ S;
         Esse aplicativo não terá accesso a sua senha do $app_title, mas terá acesso as suas informações pessoais, como: e-mail, telefone, enderço, etc.
       </p>
     </div>
-    <div class="">
+    <div>
         <form method="post">
-            <input type="submit" name="authorized" class="btn btn-success btn-lg" value="Autorizar acesso">
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <input type="submit" name="authorized" class="btn btn-warning btn-lg" value="Recusar">
+          <div class="row">
+            <div class="col-xs-6 col-sm-4 col-md-4">
+              <p>
+              <input type="submit" name="authorized" class="btn btn-success btn-lg" value="Autorizar acesso">
+              </p>
+            </div>
+            <div class="clearfix visible-xs"></div>
+            <div class="col-xs-6 col-sm-4 col-md-4">
+              <p>
+              <input type="submit" name="authorized" class="btn btn-warning btn-lg" value="Recusar">
+              </p>
+            </div>
+          </div>
         </form>
     </div>
 </div>
 S;
-
         return self::page($content);
     }
 }
