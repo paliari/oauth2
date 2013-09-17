@@ -115,7 +115,7 @@ S;
     </div>
     <div class="">
         <form method="post">
-            <input type="submit" name="authorized" class="btn btn-primary btn-lg" value="Autorizar acesso">
+            <input type="submit" name="authorized" class="btn btn-success btn-lg" value="Autorizar acesso">
             &nbsp;&nbsp;&nbsp;&nbsp;
             <input type="submit" name="authorized" class="btn btn-warning btn-lg" value="Recusar">
         </form>
