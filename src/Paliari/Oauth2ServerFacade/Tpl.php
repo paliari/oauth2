@@ -119,13 +119,13 @@ S;
           <div class="row">
             <div class="col-xs-6 col-sm-4 col-md-4">
               <p>
-              <input type="submit" name="authorized" class="btn btn-success btn-lg" value="Autorizar acesso">
+              <button type="submit" name="authorized" class="btn btn-success btn-lg" value="yes">Autorizar acesso</button>
               </p>
             </div>
             <div class="clearfix visible-xs"></div>
             <div class="col-xs-6 col-sm-4 col-md-4">
               <p>
-              <input type="submit" name="authorized" class="btn btn-warning btn-lg" value="Recusar">
+              <button type="submit" name="authorized" class="btn btn-warning btn-lg" value="no">Recusar</button>
               </p>
             </div>
           </div>

@@ -120,7 +120,6 @@ class Oauth2Facade
 
     public function authorize()
     {
-
         $request = Request::createFromGlobals();
         $response = new Response();
 
@@ -141,7 +140,7 @@ class Oauth2Facade
         }
 
         // print the authorization code if the user has authorized your client
-        $is_authorized = ($_POST['authorized'] === 'Autorizar');
+        $is_authorized = ($_POST['authorized'] === 'yes');
         $this->server->handleAuthorizeRequest($request, $response, $is_authorized, $user_id);
 
         if ($is_authorized) {
