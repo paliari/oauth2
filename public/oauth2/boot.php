@@ -29,3 +29,10 @@ $oauth = new \Paliari\Oauth2ServerFacade\Oauth2Facade($storage);
 
 $userProvider = new UserProvider($storage);
 $oauth->setUserProvider($userProvider);
+
+$oauth->setResourceHandler(function($path, $user_id) use ($storage) {
+    if ('user/profile'==$path) {
+        return $storage->getUser($user_id);
+    }
+    return compact('path', 'user_id');
+});
