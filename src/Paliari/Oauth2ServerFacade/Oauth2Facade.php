@@ -41,6 +41,11 @@ class Oauth2Facade
 
     /**
      *
+     */
+    protected $resourceHandler;
+
+    /**
+     *
      * @param Doctrine|\PDO $storage
      *
      * @param array $config default array(
@@ -75,6 +80,11 @@ class Oauth2Facade
 
     }
 
+    public function setResourceHandler($resourceHandler)
+    {
+        $this->resourceHandler = $resourceHandler;
+    }
+
     /**
      * @param UserProviderInterface $userProvider
      */
@@ -107,13 +117,14 @@ class Oauth2Facade
                 $this->token();
             break;
 
-            case "resource":
-                $this->resource();
-            break;
-
+            // @TODO implementar
             case "refresh":
                 $this->refresh();
             break;
+        }
+
+        if ( preg_match("!resource/(.+)!", $path, $matches) ) {
+            $this->resource($matches[1]);
         }
     }
 
@@ -161,7 +172,7 @@ class Oauth2Facade
         $tr->send();
     }
 
-    public function resource()
+    public function resource($path)
     {
         // Handle a request for an OAuth2.0 Access Token and send the response to the client
         if (!$this->server->verifyResourceRequest(Request::createFromGlobals())) {
@@ -169,13 +180,14 @@ class Oauth2Facade
             die;
         }
         $token = $this->server->getAccessTokenData(Request::createFromGlobals());
-        $ret = array(
-            'success' => true,
-            'message' => 'You accessed my APIs!',
-            'token' => $token,
-        );
 
-        echo json_encode($ret);
+        $return = array();
+
+        if ( is_callable($this->resourceHandler) ) {
+            $return = call_user_func($this->resourceHandler, $path, $token['user_id']);
+        }
+
+        echo json_encode($return);
     }
 
     public function refresh()
