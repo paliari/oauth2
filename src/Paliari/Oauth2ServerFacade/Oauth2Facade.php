@@ -123,7 +123,6 @@ class Oauth2Facade
 
         $request = Request::createFromGlobals();
         $response = new Response();
-Analog::log(var_export($request, true)."\n================================\n");
 
         // validate the authorize request
         if (!$this->server->validateAuthorizeRequest($request, $response)) {
@@ -144,12 +143,10 @@ Analog::log(var_export($request, true)."\n================================\n");
         // print the authorization code if the user has authorized your client
         $is_authorized = ($_POST['authorized'] === 'yes');
         $this->server->handleAuthorizeRequest($request, $response, $is_authorized, $user_id);
-Analog::log("\n================================\nRESPONSE:\n".var_export($response, true)."\n================================\n");
         if ($is_authorized) {
             // this is only here so that you get to see your code in the cURL request. Otherwise, we'd redirect back to the client
             $code = substr($response->getHttpHeader('Location'), strpos($response->getHttpHeader('Location'), 'code=')+5, 40);
             $response->send();
-Analog::log("\n================================\nRESPONSE:\n".var_export($response->getResponseBody(), true)."\n================================\n");
             //exit("SUCCESS! Authorization Code: $code");
         }
         $response->send();
@@ -159,11 +156,9 @@ Analog::log("\n================================\nRESPONSE:\n".var_export($respon
     public function token()
     {
         $request = Request::createFromGlobals();
-Analog::log("\nRequest token: ".var_export($request, true)."\n================================\n");
         // Handle a request for an OAuth2.0 Access Token and send the response to the client
         $tr = $this->server->handleTokenRequest($request);
         $tr->send();
-Analog::log("Response token:".var_export($tr->getResponseBody(), true)."\n================================\n");
     }
 
     public function resource()
