@@ -7,8 +7,8 @@ if (!empty($_POST) && $_POST['login']=='marcos' && $_POST['password']=='123') {
     $user = $storage->fetch($sql, array('login' => $_POST['login']));
     if ($user && $user['senha']===$_POST['password']) {
         $_SESSION['usuario_id'] = $user['id'];
-        $location = $_REQUEST['location'];
-        header("Location: $location");
+        $return_to = $_REQUEST['return_to'];
+        header("Location: $return_to");
         exit;
     }
 }

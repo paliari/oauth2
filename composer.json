@@ -15,7 +15,8 @@
         }
     },
     "require": {
-        "bshaffer/oauth2-server-php": "dev-master"
+        "bshaffer/oauth2-server-php": "dev-master",
+        "analog/analog": "dev-master"
     },
     "require-dev": {
         "doctrine/dbal": "2.2.2"

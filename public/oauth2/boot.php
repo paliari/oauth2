@@ -1,7 +1,12 @@
 <?php
+ini_set('date.timezone', 'America/Sao_Paulo');
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/UserProvider.php';
+
+$log_file = __DIR__ . '/../../tmp/logs.txt';
+
+\Analog\Analog::handler(\Analog\Handler\File::init($log_file));
 
 $connectionParams = array(
     'driver' => 'pdo_mysql',
