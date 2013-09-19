@@ -78,6 +78,9 @@ S;
         extract($client);
         $app_title = self::$app_title;
 
+        $uris = explode(' ', $redirect_uri);
+        $redirect_uri = $uris[0];
+
         $content = <<<S
 <div class="container">
     <div class="page-header">
