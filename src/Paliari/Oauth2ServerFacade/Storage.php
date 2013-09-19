@@ -110,4 +110,20 @@ class Storage extends Pdo
         return $res;
     }
 
+    /**
+     * Garbage Collection
+     */
+    public function gc()
+    {
+        $expires = date('Y-m-d H:i:s');
+        $tables = array(
+            'access_token_table',
+            'refresh_token_table',
+            'code_table',
+        );
+        foreach ($tables as $table) {
+            $stmt = $this->db->prepare(sprintf('DELETE FROM %s WHERE expires < :expires', $this->config[$table]));
+            $stmt->execute(compact('expires'));
+        }
+    }
 }
