@@ -76,6 +76,8 @@ class Oauth2Facade
         // Add the "Authorization Code" grant type (this is where the oauth magic happens)
         $server->addGrantType(new AuthorizationCode($storage));
 
+        $server->addGrantType(new RefreshToken($storage));
+
         $this->server = $server;
 
     }
@@ -117,10 +119,6 @@ class Oauth2Facade
                 $this->token();
             break;
 
-            // @TODO implementar
-            case "refresh":
-                $this->refresh();
-            break;
         }
 
         if ( preg_match("!resource/(.+)!", $path, $matches) ) {
@@ -190,22 +188,4 @@ class Oauth2Facade
         echo json_encode($return);
     }
 
-    public function refresh()
-    {
-        $request = Request::createFromGlobals();
-        $response = new Response();
-
-        $refresh = new RefreshToken($this->storage);
-
-        // validate the authorize request
-        if (!$refresh->validateRequest($request, $response)) {
-            $response->send();
-            die;
-        }
-
-        $accessToken = new \OAuth2\ResponseType\AccessToken($this->storage);
-        $token = $refresh->createAccessToken($accessToken, $refresh->getClientId(), $refresh->getUserId(), $refresh->getScope());
-        header('Content-Type: application/json');
-        echo json_encode($token);
-    }
 }
