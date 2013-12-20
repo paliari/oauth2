@@ -15,7 +15,7 @@
         }
     },
     "require": {
-        "bshaffer/oauth2-server-php": "dev-master",
+		"bshaffer/oauth2-server-php": "v1.0",
         "analog/analog": "dev-master"
     },
     "require-dev": {
