@@ -92,6 +92,12 @@ class Storage extends Pdo
         return $token;
     }
 
+    /**
+     * @param string $sql
+     * @param array  $params
+     *
+     * @return array|bool
+     */
     public function fetch($sql, $params = array())
     {
         $stmt = $this->db->prepare($sql);
