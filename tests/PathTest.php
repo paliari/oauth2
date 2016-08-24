@@ -1,6 +1,5 @@
 <?php
-
-use Paliari\Oauth2\Path;
+use Paliari\Oauth2ServerFacade\Path;
 
 class PathTest extends PHPUnit_Framework_Testcase
 {
@@ -39,4 +38,5 @@ class PathTest extends PHPUnit_Framework_Testcase
         $path = new Path(array('REQUEST_URI' => '/api/oauth2/token/expire', 'SCRIPT_NAME' => '/api/oauth2/index.php'));
         $this->assertEquals('token/expire', $path);
     }
+
 }
