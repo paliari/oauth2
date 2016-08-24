@@ -39,9 +39,9 @@ class Oauth2Facade
 
     /**
      *
-     * @param Doctrine|\PDO $storage
+     * @param Storage|\PDO $storage
      *
-     * @param array         $config default array(
+     * @param array        $config default array(
      * 'access_lifetime'          => 3600,
      * 'www_realm'                => 'Service',
      * 'token_param_name'         => 'access_token',
@@ -116,16 +116,16 @@ class Oauth2Facade
             $response->send();
             die;
         }
-        $client_id = $request->query("client_id");
-        $client    = $this->storage->getClientDetails($client_id);
-        $user_id   = $this->getUserProvider()->getUserId();
+        $client_id     = $request->query("client_id");
+        $client        = $this->storage->getClientDetails($client_id);
+        $user_id       = $this->getUserProvider()->getUserId();
+        $is_authorized = $this->authorized($client_id, $user_id);
         // display an authorization form
-        if (empty($_POST)) {
+        if (empty($_POST) && !$is_authorized) {
             $html = Tpl::authorize($client);
             exit($html);
         }
         // print the authorization code if the user has authorized your client
-        $is_authorized = ($_POST['authorized'] === 'yes');
         $this->server->handleAuthorizeRequest($request, $response, $is_authorized, $user_id);
         if ($is_authorized) {
             // this is only here so that you get to see your code in the cURL request. Otherwise, we'd redirect back to the client
@@ -134,7 +134,6 @@ class Oauth2Facade
             //exit("SUCCESS! Authorization Code: $code");
         }
         $response->send();
-
     }
 
     public function token()
@@ -158,6 +157,26 @@ class Oauth2Facade
             $return = call_user_func($this->resourceHandler, $path, $token['user_id']);
         }
         echo json_encode($return);
+    }
+
+    /**
+     * @param string $client_id
+     * @param string $user_id
+     *
+     * @return bool
+     */
+    protected function authorized($client_id, $user_id)
+    {
+        if ($this->storage->getClientUser($client_id, $user_id)) {
+            return true;
+        }
+        if ($_POST && 'yes' === @$_POST['authorized']) {
+            $this->storage->setClientUser($client_id, $user_id);
+
+            return true;
+        }
+
+        return false;
     }
 
 }
