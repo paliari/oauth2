@@ -17,6 +17,7 @@ class Storage extends Pdo
             'client_table'        => 'oauth_clients',
             'access_token_table'  => 'oauth_access_tokens',
             'refresh_token_table' => 'oauth_refresh_tokens',
+            'client_user_table'   => 'oauth_client_user',
             'code_table'          => 'oauth_authorization_codes',
             'user_table'          => 'oauth_users',
             'jwt_table'           => 'oauth_jwt',
@@ -117,6 +118,14 @@ class Storage extends Pdo
             $stmt = $this->db->prepare(sprintf('DELETE FROM %s WHERE expires < :expires', $this->config[$table]));
             $stmt->execute(compact('expires'));
         }
+    }
+
+    public function getClientUser($client_id, $user_id)
+    {
+        $sql = 'SELECT * from %s where client_id = :client_id and user_id = :user_id';
+        $sql = sprintf($sql, $this->config['client_user_table']);
+
+        return $this->fetch($sql, compact('client_id', 'user_id'));
     }
 
 }
