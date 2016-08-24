@@ -141,7 +141,9 @@ class Storage extends Pdo
             $sql        = 'INSERT INTO %s (client_id, user_id, created_at) VALUES (:client_id, :user_id, :created_at)';
             $sql        = sprintf($sql, $this->config['client_user_table']);
 
-            return $this->fetch($sql, compact('client_id', 'user_id', 'created_at'));
+            $params = array_map('trim', compact('client_id', 'user_id', 'created_at'));
+
+            return $this->db->prepare($sql)->execute($params);
         }
     }
 
@@ -167,10 +169,11 @@ class Storage extends Pdo
      */
     public function removeClientUser($client_id, $user_id)
     {
-        $sql = 'DELETE from %s where client_id = :client_id and user_id = :user_id';
-        $sql = sprintf($sql, $this->config['client_user_table']);
+        $sql    = 'DELETE from %s where client_id = :client_id and user_id = :user_id';
+        $sql    = sprintf($sql, $this->config['client_user_table']);
+        $params = array_map('trim', compact('client_id', 'user_id'));
 
-        return $this->fetch($sql, compact('client_id', 'user_id'));
+        return $this->db->prepare($sql)->execute($params);
     }
 
 }
