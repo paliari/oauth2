@@ -120,9 +120,48 @@ class Storage extends Pdo
         }
     }
 
+    /**
+     * @param string $client_id
+     * @param string $user_id
+     *
+     * @return bool
+     */
+    public function setClientUser($client_id, $user_id)
+    {
+        if ($this->getClientUser($client_id, $user_id)) {
+            return true;
+        } else {
+            $created_at = date('Y-m-d H:i:s');
+            $sql        = 'INSERT INTO %s (client_id, user_id, created_at) VALUES (:client_id, :user_id, :created_at)';
+            $sql        = sprintf($sql, $this->config['client_user_table']);
+
+            return $this->fetch($sql, compact('client_id', 'user_id', 'created_at'));
+        }
+    }
+
+    /**
+     * @param string $client_id
+     * @param string $user_id
+     *
+     * @return array|bool
+     */
     public function getClientUser($client_id, $user_id)
     {
         $sql = 'SELECT * from %s where client_id = :client_id and user_id = :user_id';
+        $sql = sprintf($sql, $this->config['client_user_table']);
+
+        return $this->fetch($sql, compact('client_id', 'user_id'));
+    }
+
+    /**
+     * @param string $client_id
+     * @param string $user_id
+     *
+     * @return bool
+     */
+    public function removeClientUser($client_id, $user_id)
+    {
+        $sql = 'DELETE from %s where client_id = :client_id and user_id = :user_id';
         $sql = sprintf($sql, $this->config['client_user_table']);
 
         return $this->fetch($sql, compact('client_id', 'user_id'));
