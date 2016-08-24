@@ -1,20 +1,13 @@
 <?php
-/**
- * User: marcos
- * Date: 09/09/13
- * Time: 17:12
- */
-
 namespace Paliari\Oauth2ServerFacade;
 
-use Analog\Analog;
-use OAuth2\GrantType\ClientCredentials;
-use OAuth2\GrantType\RefreshToken;
-use OAuth2\Request;
-use OAuth2\Response;
-use OAuth2\GrantType\AuthorizationCode;
-use OAuth2\Server;
-use OAuth2\Storage\Pdo;
+use OAuth2\GrantType\ClientCredentials,
+    OAuth2\GrantType\AuthorizationCode,
+    OAuth2\GrantType\RefreshToken,
+    OAuth2\Storage\Pdo,
+    OAuth2\Response,
+    OAuth2\Request,
+    OAuth2\Server;
 
 class Oauth2Facade
 {
@@ -48,7 +41,7 @@ class Oauth2Facade
      *
      * @param Doctrine|\PDO $storage
      *
-     * @param array $config default array(
+     * @param array         $config default array(
      * 'access_lifetime'          => 3600,
      * 'www_realm'                => 'Service',
      * 'token_param_name'         => 'access_token',
@@ -59,27 +52,20 @@ class Oauth2Facade
      * 'allow_credentials_in_request_body' => true,
      * ).
      */
-    public function __construct($storage, $config=array())
+    public function __construct($storage, $config = array())
     {
         $this->storage = $storage;
-
-        $config = array_merge(array(
+        $config        = array_merge(array(
             'enforce_state' => false,
         ), $config);
-
         // Pass a storage object or array of storage objects to the OAuth2 server class
         $server = new Server($storage, $config);
-
         // Add the "Client Credentials" grant type (it is the simplest of the grant types)
         $server->addGrantType(new ClientCredentials($storage));
-
         // Add the "Authorization Code" grant type (this is where the oauth magic happens)
         $server->addGrantType(new AuthorizationCode($storage));
-
         $server->addGrantType(new RefreshToken($storage));
-
         $this->server = $server;
-
     }
 
     public function setResourceHandler($resourceHandler)
@@ -94,6 +80,7 @@ class Oauth2Facade
     {
         $this->userProvider = $userProvider;
     }
+
     /**
      * @return UserProviderInterface
      */
@@ -102,26 +89,19 @@ class Oauth2Facade
         return $this->userProvider;
     }
 
-    /**
-     * @param UserProviderInterface $userProvider
-     * @param $connection
-     */
     public function frontController()
     {
         $path = new Path();
-
         switch ($path) {
             case "authorize":
                 $this->authorize();
-            break;
-
+                break;
             case "token":
                 $this->token();
-            break;
+                break;
 
         }
-
-        if ( preg_match("!resource/(.+)!", $path, $matches) ) {
+        if (preg_match("!resource/(.+)!", $path, $matches)) {
             $this->resource($matches[1]);
         }
     }
@@ -129,32 +109,27 @@ class Oauth2Facade
     public function authorize()
     {
         $this->getUserProvider()->verifyUser();
-
-        $request = Request::createFromGlobals();
+        $request  = Request::createFromGlobals();
         $response = new Response();
-
         // validate the authorize request
         if (!$this->server->validateAuthorizeRequest($request, $response)) {
             $response->send();
             die;
         }
-
         $client_id = $request->query("client_id");
-        $client = $this->storage->getClientDetails($client_id);
-        $user_id = $this->getUserProvider()->getUserId();
-
+        $client    = $this->storage->getClientDetails($client_id);
+        $user_id   = $this->getUserProvider()->getUserId();
         // display an authorization form
         if (empty($_POST)) {
             $html = Tpl::authorize($client);
             exit($html);
         }
-
         // print the authorization code if the user has authorized your client
         $is_authorized = ($_POST['authorized'] === 'yes');
         $this->server->handleAuthorizeRequest($request, $response, $is_authorized, $user_id);
         if ($is_authorized) {
             // this is only here so that you get to see your code in the cURL request. Otherwise, we'd redirect back to the client
-            $code = substr($response->getHttpHeader('Location'), strpos($response->getHttpHeader('Location'), 'code=')+5, 40);
+            $code = substr($response->getHttpHeader('Location'), strpos($response->getHttpHeader('Location'), 'code=') + 5, 40);
             $response->send();
             //exit("SUCCESS! Authorization Code: $code");
         }
@@ -177,14 +152,11 @@ class Oauth2Facade
             $this->server->getResponse()->send();
             die;
         }
-        $token = $this->server->getAccessTokenData(Request::createFromGlobals());
-
+        $token  = $this->server->getAccessTokenData(Request::createFromGlobals());
         $return = array();
-
-        if ( is_callable($this->resourceHandler) ) {
+        if (is_callable($this->resourceHandler)) {
             $return = call_user_func($this->resourceHandler, $path, $token['user_id']);
         }
-
         echo json_encode($return);
     }
 
